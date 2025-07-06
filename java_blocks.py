@@ -8,12 +8,17 @@ from python_blocks import CodeBlock  # Import the class from python_blocks or mo
 # This script parses Java files and extracts code blocks for further analysis.
 
 class JavaNode(object):
+    # Represents a Java code block (class, method, or control structure)
     def __init__(self, node_type, name, start_line, end_line, body):
         self.type = node_type
         self.name = name
         self.start_line = start_line
         self.end_line = end_line
         self.body = body
+
+# Extracts a block of code starting at 'start' by counting braces
+# Returns the block lines, start index, and end index
+# Used for classes, methods, and control blocks
 
 def extract_block(lines, start):
     body = [lines[start]]
@@ -26,18 +31,23 @@ def extract_block(lines, start):
         i += 1
     return body, start, i - 1  # body as list, start and end indices (inclusive)
 
+# Recursively parses lines to find Java classes, methods, and control blocks
+# Returns a list of JavaNode objects representing each block
+# Handles nested classes and methods
+
 def parse_lines(lines, abs_start_idx):
     nodes = []
     i = 0
     while i < len(lines):
         line = lines[i].strip()
-        # Match class
+        # Match class definition
         m = re.match(r'(public|private|protected)?\s*class\s+(\w+)', line)
         if m:
             name = m.group(2)
             block_lines, block_start, block_end = extract_block(lines, i)
             node = JavaNode("class", name, abs_start_idx + block_start + 1, abs_start_idx + block_end + 1, "".join(block_lines))
             nodes.append(node)
+            # Recursively parse the class body for inner classes/methods
             if len(block_lines) > 1:
                 sub_body_start = i + 1
                 sub_body_end = block_end + 1
@@ -45,7 +55,7 @@ def parse_lines(lines, abs_start_idx):
                 nodes.extend(subnodes)
             i = block_end + 1
             continue
-        # Match method
+        # Match method definition
         m = re.match(r'(public|private|protected)?\s*(static)?\s*\w+\s+(\w+)\s*\(.*\)\s*{', line)
         if m:
             name = m.group(3)
@@ -54,7 +64,7 @@ def parse_lines(lines, abs_start_idx):
             nodes.append(node)
             i = block_end + 1
             continue
-        # Match control blocks
+        # Match control blocks (if, else, for, while, do)
         for keyword in ['if', 'else if', 'else', 'for', 'while', 'do']:
             pattern = r'^' + keyword + r'\b.*{'
             if re.match(pattern, line):
@@ -68,6 +78,10 @@ def parse_lines(lines, abs_start_idx):
             i += 1
     return nodes, i
 
+# Main entry point: Extracts all Java code blocks from a file
+# Reads the file, parses it, and returns a list of CodeBlock objects
+# Each CodeBlock contains the name, start/end lines, code, and language
+
 def extract_java_blocks(filename):
     with open(filename, 'r') as f:
         lines = f.readlines()
@@ -75,6 +89,7 @@ def extract_java_blocks(filename):
     blocks = []
     for node in nodes:
         block_lines = node.body.splitlines()
+        # For methods, skip the signature line in body_only
         if node.type == "method" and len(block_lines) > 1:
             body_only = "\n".join(block_lines[1:])
             for offset, line in enumerate(block_lines[1:], 1):
