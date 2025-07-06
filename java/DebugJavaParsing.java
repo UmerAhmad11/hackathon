@@ -31,6 +31,11 @@ public class DebugJavaParsing {
             }
             System.out.println("--------------------------------------------------");
         }
+
+        // Debug print all detected blocks
+        JavaBlocks.debugPrintBlocks(blocks);
+        // Debug print normalized code for each block
+        JavaBlocks.debugPrintNormalized(blocks);
     }
 
     public static void main(String[] args) throws IOException {

@@ -3,7 +3,7 @@ import threading
 
 from python_blocks import extract_python_blocks
 from java_blocks import extract_java_blocks
-from duplicate_detection import mark_duplicates
+from duplicate_detection import mark_duplicates, normalize_code
 import time
 start_time = time.time()
 # main.py
@@ -73,10 +73,16 @@ if __name__ == "__main__":
     with open("output/duplicates_java.txt", "w") as f:
         f.writelines(java_report_lines)
 
-    # Write all detected Python blocks to output/python_outtie
+    # Write all detected Python blocks to output/python_outtie (deduplicated)
+    seen = set()
     with open("output/python_outtie", "w") as f:
         for block in all_blocks:
             if getattr(block, 'language', None) == 'python':
+                code_to_normalize = getattr(block, 'body_only', block.code)
+                normalized = normalize_code(code_to_normalize)
+                if normalized in seen:
+                    continue
+                seen.add(normalized)
                 entry = (
                     "Python block: {} ({}-{})\n".format(block.name, block.start_line, block.end_line)
                     + "{}\n------\n".format(block.code.strip())

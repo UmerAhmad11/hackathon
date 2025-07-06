@@ -69,10 +69,10 @@ public class JavaBlocks {
                 i = blockRes.end + 1;
                 continue;
             }
-            // Match method
-            m = Pattern.compile("(public|private|protected)?\\s*(static)?\\s*\\w+\\s+(\\w+)\\s*\\(.*\\)\\s*\\{").matcher(line);
+            // Match method (improved regex: handles annotations, generics, multi-line)
+            m = Pattern.compile("^(?:@[\\w.]+\\s*)*(public|private|protected)?\\s*(static)?\\s*(<.*?>\\s*)?[\\w\\s<>\\[\\]]+\\s+(\\w+)\\s*\\(.*\\)\\s*\\{", Pattern.DOTALL).matcher(line);
             if (m.find()) {
-                String name = m.group(3);
+                String name = m.group(4);
                 BlockExtractionResult blockRes = extractBlock(lines, i);
                 JavaNode node = new JavaNode("method", name, absStartIdx + blockRes.start + 1, absStartIdx + blockRes.end + 1, String.join("\n", blockRes.body));
                 nodes.add(node);
@@ -158,5 +158,26 @@ public class JavaBlocks {
             blocks.add(cb);
         }
         return blocks;
+    }
+
+    // DEBUG: Print all detected blocks
+    public static void debugPrintBlocks(List<CodeBlock> blocks) {
+        for (CodeBlock block : blocks) {
+            System.out.printf("[DEBUG] Block: %s | Type: %s | Lines: %d-%d\n", block.name, block.getClass().getSimpleName(), block.startLine, block.endLine);
+        }
+    }
+    // DEBUG: Print normalized code for each block
+    public static void debugPrintNormalized(List<CodeBlock> blocks) {
+        for (CodeBlock block : blocks) {
+            String codeToNormalize;
+            try {
+                codeToNormalize = (String) block.getClass().getField("body_only").get(block);
+                if (codeToNormalize == null) codeToNormalize = block.code;
+            } catch (Exception e) {
+                codeToNormalize = block.code;
+            }
+            String normalized = DuplicateDetection.normalizeCode(codeToNormalize);
+            System.out.printf("[DEBUG] Block: %s | Normalized: %s\n", block.name, normalized);
+        }
     }
 } 
