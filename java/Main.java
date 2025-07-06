@@ -103,6 +103,7 @@ public class Main {
         }
 
         // Write all detected Python blocks to output/all_python_blocks.txt
+        /* 
         try (PrintWriter out = new PrintWriter("output/all_python_blocks.txt")) {
             for (CodeBlock block : allBlocks) {
                 if ("python".equals(block.language)) {
@@ -113,6 +114,6 @@ public class Main {
                     out.print(entry);
                 }
             }
-        }
+        }*/
     }
 } 

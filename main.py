@@ -74,6 +74,7 @@ if __name__ == "__main__":
         f.writelines(java_report_lines)
 
     # Write all detected Python blocks to output/python_outtie (deduplicated)
+    '''
     seen = set()
     with open("output/python_outtie", "w") as f:
         for block in all_blocks:
@@ -88,7 +89,7 @@ if __name__ == "__main__":
                     + "{}\n------\n".format(block.code.strip())
                 )
                 f.write(entry)
-
+    '''
     # Optional: run threaded scanning print
     run_in_threads(all_blocks)
 
