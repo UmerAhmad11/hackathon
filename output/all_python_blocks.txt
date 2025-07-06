@@ -1,0 +1,207 @@
+Python block: greet (6-9)
+def greet():
+    print("Hello, welcome to the system!")
+    print("Enjoy your stay.")
+------
+Python block: calculate_area (10-12)
+def calculate_area(radius):
+    return math.pi * radius ** 2
+------
+Python block: print_employee_names (13-16)
+def print_employee_names(names):
+    for name in names:
+        print(f"Employee: {name}")
+------
+Python block: greet (17-20)
+def greet():
+    print("Hello, welcome to the system!")
+    print("Enjoy your stay.")
+------
+Python block: factorial (21-26)
+def factorial(n):
+    if n <= 1:
+        return 1
+    else:
+        return n * factorial(n - 1)
+------
+Python block: sleep_and_print (27-30)
+def sleep_and_print(seconds):
+    time.sleep(seconds)
+    print(f"Slept for {seconds} seconds")
+------
+Python block: print_employee_names (31-34)
+def print_employee_names(names):
+    for name in names:
+        print(f"Employee: {name}")
+------
+Python block: unique_function_1 (35-37)
+def unique_function_1():
+    print("This function does something unique in script1.")
+------
+Python block: unique_function_2 (38-40)
+def unique_function_2():
+    print("Another unique feature here.")
+------
+Python block: factorial_iterative (41-46)
+def factorial_iterative(n):
+    result = 1
+    for i in range(2, n+1):
+        result *= i
+    return result
+------
+Python block: filler_func (49-51)
+def filler_func(i):
+    print(f"Filler function number {i}")
+------
+Python block: For (52-54)
+for i in range(50):
+    filler_func(i)
+------
+Python block: nested_example (55-61)
+def nested_example(x):
+    if x > 10:
+        for i in range(x):
+            print(i)
+    else:
+        print("Less than or equal to 10")
+------
+Python block: Employee (62-68)
+class Employee:
+    def __init__(self, name):
+        self.name = name
+
+    def greet(self):
+        print(f"Hello, I am {self.name}")
+------
+Python block: Manager (69-73)
+class Manager(Employee):
+    def greet(self):
+        super().greet()
+        print("I manage people.")
+------
+Python block: Manager (75-79)
+class Manager(Employee):
+    def greet(self):
+        super().greet()
+        print("I manage people.")
+------
+Python block: recursive_sum (80-84)
+def recursive_sum(n):
+    if n == 0:
+        return 0
+    return n + recursive_sum(n - 1)
+------
+Python block: unique_function_3 (85-87)
+def unique_function_3():
+    print("Unique code snippet in script1")
+------
+Python block: filler_func_2 (90-92)
+def filler_func_2(i):
+    print(f"Another filler function {i}")
+------
+Python block: For (93-95)
+for i in range(50, 100):
+    filler_func_2(i)
+------
+Python block: print_welcome (96-98)
+def print_welcome():
+    print("Welcome to the Python script!")
+------
+Python block: greet (106-109)
+def greet():
+    print("Hello, welcome to the system!")
+    print("Enjoy your stay.")
+------
+Python block: calculate_area (110-112)
+def calculate_area(radius):
+    return math.pi * radius ** 2
+------
+Python block: print_employee_list (113-116)
+def print_employee_list(names):
+    for name in names:
+        print(f"Employee: {name}")
+------
+Python block: factorial (117-122)
+def factorial(n):
+    if n <= 1:
+        return 1
+    else:
+        return n * factorial(n - 1)
+------
+Python block: sleep_and_report (123-126)
+def sleep_and_report(seconds):
+    time.sleep(seconds)
+    print(f"Slept for {seconds} seconds")
+------
+Python block: unique_function_a (127-129)
+def unique_function_a():
+    print("Unique function in script2.")
+------
+Python block: factorial_iter (130-135)
+def factorial_iter(n):
+    result = 1
+    for i in range(2, n+1):
+        result *= i
+    return result
+------
+Python block: print_employee_list (136-139)
+def print_employee_list(names):
+    for name in names:
+        print(f"Employee: {name}")
+------
+Python block: unique_function_b (140-142)
+def unique_function_b():
+    print("Another unique function in script2.")
+------
+Python block: filler_func (143-145)
+def filler_func(i):
+    print(f"Filler function number {i}")
+------
+Python block: For (146-148)
+for i in range(60):
+    filler_func(i)
+------
+Python block: nested_check (149-155)
+def nested_check(x):
+    if x > 10:
+        for i in range(x):
+            print(i)
+    else:
+        print("Less than or equal to 10")
+------
+Python block: Employee (156-162)
+class Employee:
+    def __init__(self, name):
+        self.name = name
+
+    def greet(self):
+        print(f"Hello, I am {self.name}")
+------
+Python block: Manager (163-167)
+class Manager(Employee):
+    def greet(self):
+        super().greet()
+        print("I manage people.")
+------
+Python block: recursive_sum (168-172)
+def recursive_sum(n):
+    if n == 0:
+        return 0
+    return n + recursive_sum(n - 1)
+------
+Python block: unique_function_c (173-175)
+def unique_function_c():
+    print("Unique snippet in script2")
+------
+Python block: filler_func_2 (176-178)
+def filler_func_2(i):
+    print(f"Another filler function {i}")
+------
+Python block: For (179-181)
+for i in range(60, 120):
+    filler_func_2(i)
+------
+Python block: print_welcome (182-184)
+def print_welcome():
+    print("Welcome to the Python script!")
+------

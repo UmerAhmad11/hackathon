@@ -73,6 +73,16 @@ if __name__ == "__main__":
     with open("output/duplicates_java.txt", "w") as f:
         f.writelines(java_report_lines)
 
+    # Write all detected Python blocks to output/python_outtie
+    with open("output/python_outtie", "w") as f:
+        for block in all_blocks:
+            if getattr(block, 'language', None) == 'python':
+                entry = (
+                    "Python block: {} ({}-{})\n".format(block.name, block.start_line, block.end_line)
+                    + "{}\n------\n".format(block.code.strip())
+                )
+                f.write(entry)
+
     # Optional: run threaded scanning print
     run_in_threads(all_blocks)
 

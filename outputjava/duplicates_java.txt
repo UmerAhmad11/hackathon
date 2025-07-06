@@ -1,0 +1,26 @@
+Duplicate block in java: helperWelcome (76-78)
+public void helperWelcome() {
+            System.out.println("Welcome to the Employee Management System.");
+            System.out.println("We value every employee.");
+        }
+------
+Duplicate block in java: helperWelcome (62-64)
+public void helperWelcome() {
+            System.out.println("Welcome to the Employee Management System.");
+            System.out.println("We value every employee.");
+        }
+------
+Duplicate block in java: helperLoop (81-84)
+public void helperLoop() {
+            for (int i = 0; i < employeeNames.length; i++) {
+                System.out.println("Employee: " + employeeNames[i]);
+            }
+        }
+------
+Duplicate block in java: helperLoop (67-70)
+public void helperLoop() {
+            for (int i = 0; i < employeeNames.length; i++) {
+                System.out.println("Employee: " + employeeNames[i]);
+            }
+        }
+------

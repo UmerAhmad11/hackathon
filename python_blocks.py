@@ -21,10 +21,6 @@ class CodeBlock(object):
             print(self.code.strip())
             print("------")
 
-# Finds the end of a Python block by comparing indentation
-# Returns the index where the block ends (exclusive)
-# Used for both classes and functions
-
 def find_block_end(start_index, lines):
     base_indent = len(lines[start_index]) - len(lines[start_index].lstrip())
     for i in range(start_index + 1, len(lines)):
@@ -36,10 +32,6 @@ def find_block_end(start_index, lines):
             return i
     return len(lines)
 
-# Main entry point: Extracts all Python code blocks from a file
-# Uses the ast module to walk the syntax tree and find classes and functions
-# For each block, determines its start and end lines and creates a CodeBlock object
-
 def extract_python_blocks(filename):
     with open(filename, 'r') as f:
         source = f.read()
@@ -49,10 +41,10 @@ def extract_python_blocks(filename):
     blocks = []
 
     for node in ast.walk(tree):
-        if isinstance(node, (ast.FunctionDef, ast.ClassDef)):
+        if isinstance(node, (ast.FunctionDef, ast.ClassDef, ast.For, ast.While, ast.If)):
             start = node.lineno - 1
             end = find_block_end(start, lines)
             block_code = "\n".join(lines[start:end])
-            blocks.append(CodeBlock(node.name, start + 1, end, block_code, 'python'))
+            blocks.append(CodeBlock(node.name if hasattr(node, 'name') else type(node).__name__, start + 1, end, block_code, 'python'))
 
     return blocks
