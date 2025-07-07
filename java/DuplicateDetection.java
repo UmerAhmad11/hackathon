@@ -13,7 +13,7 @@ public class DuplicateDetection {
         code = code.replaceAll("#.*", "");
         // Remove multi-line comments (/* ... */)
         code = code.replaceAll("(?s)/\\*.*?\\*/", "");
-        // Remove all whitespace
+        // Remove all whitespace (spaces, tabs, newlines)
         code = code.replaceAll("\\s+", "");
         // Lowercase
         code = code.toLowerCase();
@@ -22,29 +22,37 @@ public class DuplicateDetection {
 
     // Mark duplicates among code blocks and group them
     public static Map<String, List<CodeBlock>> markDuplicates(List<CodeBlock> blocks) {
-        Map<String, CodeBlock> seen = new HashMap<>();
         Map<String, List<CodeBlock>> duplicatesGroups = new HashMap<>();
+        List<String> normalizedBodies = new ArrayList<>();
+        List<CodeBlock> allBlocks = new ArrayList<>(blocks);
 
-        for (CodeBlock block : blocks) {
-            // Use body_only if available, else code
+        // Build normalized body_only list
+        for (CodeBlock block : allBlocks) {
             String codeToNormalize;
             try {
                 codeToNormalize = (String) block.getClass().getField("body_only").get(block);
-                if (codeToNormalize == null) codeToNormalize = block.code;
+                if (codeToNormalize == null || codeToNormalize.trim().isEmpty()) codeToNormalize = block.code;
             } catch (Exception e) {
                 codeToNormalize = block.code;
             }
             String normalized = normalizeCode(codeToNormalize);
-            if (seen.containsKey(normalized)) {
-                block.isDuplicate = true;
-                seen.get(normalized).isDuplicate = true;
-                duplicatesGroups.computeIfAbsent(normalized, k -> new ArrayList<>()).add(block);
-                if (!duplicatesGroups.get(normalized).contains(seen.get(normalized))) {
-                    duplicatesGroups.get(normalized).add(seen.get(normalized));
+            normalizedBodies.add(normalized);
+        }
+
+        // Brute-force compare all pairs
+        for (int i = 0; i < allBlocks.size(); i++) {
+            for (int j = i + 1; j < allBlocks.size(); j++) {
+                if (normalizedBodies.get(i).equals(normalizedBodies.get(j))) {
+                    allBlocks.get(i).isDuplicate = true;
+                    allBlocks.get(j).isDuplicate = true;
+                    // Add both to the group for this normalized body
+                    String key = normalizedBodies.get(i);
+                    duplicatesGroups.computeIfAbsent(key, k -> new ArrayList<>());
+                    if (!duplicatesGroups.get(key).contains(allBlocks.get(i)))
+                        duplicatesGroups.get(key).add(allBlocks.get(i));
+                    if (!duplicatesGroups.get(key).contains(allBlocks.get(j)))
+                        duplicatesGroups.get(key).add(allBlocks.get(j));
                 }
-            } else {
-                block.isDuplicate = false;
-                seen.put(normalized, block);
             }
         }
         return duplicatesGroups;

@@ -1,26 +1,99 @@
-Duplicate block in java: helperWelcome (76-78)
-public void helperWelcome() {
+[JavaParser-based duplicate detection]
+  -> Method monitorSystem [45-50]
+Duplicate block in java: monitorSystem (45-50)
+    public void monitorSystem() {
+        while (true) {
+            System.out.println("Monitoring system...");
+            break;
+        }
+    }
+------
+  -> Method runDiagnostics [52-57]
+Duplicate block in java: runDiagnostics (52-57)
+    public void runDiagnostics() {
+        while (true) {
+            System.out.println("Monitoring system...");
+            break;
+        }
+    }
+------
+  -> Method printWelcomeMessage [7-10]
+Duplicate block in java: printWelcomeMessage (7-10)
+    public void printWelcomeMessage() {
+        System.out.println("Welcome to the Employee Management System.");
+        System.out.println("We value every employee.");
+    }
+------
+  -> Method greetEmployees [12-15]
+Duplicate block in java: greetEmployees (12-15)
+    public void greetEmployees() {
+        System.out.println("Welcome to the Employee Management System.");
+        System.out.println("We value every employee.");
+    }
+------
+  -> Method helperWelcome [61-64]
+Duplicate block in java: helperWelcome (61-64)
+        public void helperWelcome() {
             System.out.println("Welcome to the Employee Management System.");
             System.out.println("We value every employee.");
         }
 ------
-Duplicate block in java: helperWelcome (62-64)
-public void helperWelcome() {
+  -> Method helperWelcome [75-78]
+Duplicate block in java: helperWelcome (75-78)
+        public void helperWelcome() {
             System.out.println("Welcome to the Employee Management System.");
             System.out.println("We value every employee.");
         }
 ------
-Duplicate block in java: helperLoop (81-84)
-public void helperLoop() {
+  -> Method listEmployees [17-21]
+Duplicate block in java: listEmployees (17-21)
+    public void listEmployees() {
+        for (int i = 0; i < employeeNames.length; i++) {
+            System.out.println("Employee: " + employeeNames[i]);
+        }
+    }
+------
+  -> Method showAllEmployees [23-27]
+Duplicate block in java: showAllEmployees (23-27)
+    public void showAllEmployees() {
+        for (int i = 0; i < employeeNames.length; i++) {
+            System.out.println("Employee: " + employeeNames[i]);
+        }
+    }
+------
+  -> Method helperLoop [66-70]
+Duplicate block in java: helperLoop (66-70)
+        public void helperLoop() {
             for (int i = 0; i < employeeNames.length; i++) {
                 System.out.println("Employee: " + employeeNames[i]);
             }
         }
 ------
-Duplicate block in java: helperLoop (67-70)
-public void helperLoop() {
+  -> Method helperLoop [80-84]
+Duplicate block in java: helperLoop (80-84)
+        public void helperLoop() {
             for (int i = 0; i < employeeNames.length; i++) {
                 System.out.println("Employee: " + employeeNames[i]);
             }
         }
+------
+  -> Method checkEmployeeStatus [29-35]
+Duplicate block in java: checkEmployeeStatus (29-35)
+    public void checkEmployeeStatus(String name) {
+        if (name.equals("Alice")) {
+            System.out.println(name + " is active.");
+        } else {
+            System.out.println(name + " is not active.");
+        }
+    }
+------
+  -> Method verifyEmployee [37-43]
+Duplicate block in java: verifyEmployee (37-43)
+    public void verifyEmployee(String name) {
+        if (name.equals("Alice")) {
+            System.out.println(name + " is active.");
+        } else {
+            System.out.println(name + " is not active.");
+        }
+    }
 ------

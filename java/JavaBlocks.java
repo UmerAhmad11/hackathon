@@ -1,5 +1,5 @@
 // JavaBlocks.java
-// Java version of java_blocks.py
+// Java version of java_blocks.py (rewritten to match logic exactly)
 // Extracts code blocks from Java files for duplicate detection.
 // Place this file in the java/ directory.
 
@@ -58,7 +58,7 @@ public class JavaBlocks {
             if (m.find()) {
                 String name = m.group(2);
                 BlockExtractionResult blockRes = extractBlock(lines, i);
-                JavaNode node = new JavaNode("class", name, absStartIdx + blockRes.start + 1, absStartIdx + blockRes.end + 1, String.join("\n", blockRes.body));
+                JavaNode node = new JavaNode("class", name, absStartIdx + blockRes.start + 1, absStartIdx + blockRes.end + 1, String.join("", blockRes.body));
                 nodes.add(node);
                 if (blockRes.body.size() > 1) {
                     int subBodyStart = i + 1;
@@ -69,29 +69,33 @@ public class JavaBlocks {
                 i = blockRes.end + 1;
                 continue;
             }
-            // Match method (improved regex: handles annotations, generics, multi-line)
-            m = Pattern.compile("^(?:@[\\w.]+\\s*)*(public|private|protected)?\\s*(static)?\\s*(<.*?>\\s*)?[\\w\\s<>\\[\\]]+\\s+(\\w+)\\s*\\(.*\\)\\s*\\{", Pattern.DOTALL).matcher(line);
+            // Match method
+            m = Pattern.compile("(public|private|protected)?\\s*(static)?\\s*\\w+\\s+(\\w+)\\s*\\(.*\\)\\s*\\{").matcher(line);
             if (m.find()) {
-                String name = m.group(4);
+                String name = m.group(3);
                 BlockExtractionResult blockRes = extractBlock(lines, i);
-                JavaNode node = new JavaNode("method", name, absStartIdx + blockRes.start + 1, absStartIdx + blockRes.end + 1, String.join("\n", blockRes.body));
+                JavaNode node = new JavaNode("method", name, absStartIdx + blockRes.start + 1, absStartIdx + blockRes.end + 1, String.join("", blockRes.body));
                 nodes.add(node);
                 i = blockRes.end + 1;
                 continue;
             }
             // Match control blocks
+            boolean matched = false;
             for (String keyword : Arrays.asList("if", "else if", "else", "for", "while", "do")) {
                 String pattern = "^" + keyword + "\\b.*\\{";
                 if (Pattern.compile(pattern).matcher(line).find()) {
                     String name = keyword.toUpperCase() + "_BLOCK_" + (absStartIdx + i + 1);
                     BlockExtractionResult blockRes = extractBlock(lines, i);
-                    JavaNode node = new JavaNode("control", name, absStartIdx + blockRes.start + 1, absStartIdx + blockRes.end + 1, String.join("\n", blockRes.body));
+                    JavaNode node = new JavaNode("control", name, absStartIdx + blockRes.start + 1, absStartIdx + blockRes.end + 1, String.join("", blockRes.body));
                     nodes.add(node);
                     i = blockRes.end + 1;
+                    matched = true;
                     break;
                 }
             }
-            i++;
+            if (!matched) {
+                i++;
+            }
         }
         return new ParseResult(nodes, i);
     }
@@ -131,27 +135,37 @@ public class JavaBlocks {
         for (JavaNode node : parseRes.nodes) {
             String[] blockLines = node.body.split("\n");
             String bodyOnly;
-            int bodyStartLine, bodyEndLine;
-            if (node.type.equals("method") && blockLines.length > 1) {
-                // Exclude method signature
-                bodyOnly = String.join("\n", Arrays.copyOfRange(blockLines, 1, blockLines.length));
-                int bodyStartOffset = 1;
-                for (int offset = 1; offset < blockLines.length; offset++) {
-                    if (!blockLines[offset].trim().isEmpty()) {
-                        bodyStartOffset = offset;
-                        break;
+            if (node.type.equals("method") && blockLines.length > 0) {
+                // Join all lines to a single string
+                String fullBlock = String.join("\n", blockLines);
+                int openIdx = fullBlock.indexOf('{');
+                int closeIdx = fullBlock.lastIndexOf('}');
+                if (openIdx != -1 && closeIdx != -1 && closeIdx > openIdx) {
+                    String inner = fullBlock.substring(openIdx + 1, closeIdx);
+                    // Split into lines, trim each line, and join
+                    String[] innerLines = inner.split("\n");
+                    List<String> trimmed = new ArrayList<>();
+                    for (String l : innerLines) {
+                        String t = l.trim();
+                        if (!t.isEmpty()) trimmed.add(t);
                     }
+                    bodyOnly = String.join(" ", trimmed);
+                } else {
+                    bodyOnly = "";
                 }
-                bodyStartLine = node.startLine + bodyStartOffset;
-                bodyEndLine = node.endLine;
             } else {
-                bodyOnly = String.join("\n", blockLines);
-                bodyStartLine = node.startLine;
-                bodyEndLine = node.endLine;
+                // For other blocks, use the whole block
+                List<String> trimmed = new ArrayList<>();
+                for (String l : blockLines) {
+                    String t = l.trim();
+                    if (!t.isEmpty()) trimmed.add(t);
+                }
+                bodyOnly = String.join(" ", trimmed);
             }
-            CodeBlock cb = new CodeBlock(node.name, bodyStartLine, bodyEndLine, node.body, "java");
+            CodeBlock cb = new CodeBlock(node.name, node.startLine, node.endLine, node.body, "java");
             try {
-                cb.getClass().getField("body_only").set(cb, bodyOnly);
+                java.lang.reflect.Field f = cb.getClass().getField("body_only");
+                f.set(cb, bodyOnly);
             } catch (Exception e) {
                 // Ignore if field doesn't exist
             }
