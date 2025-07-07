@@ -1,2 +1,0 @@
-Python Duplication Score: 0.74 (45 duplicate blocks / 61 total blocks)
-Java Duplication Score: 0.63 (12 duplicate blocks / 19 total blocks)
